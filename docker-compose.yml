@@ -1,0 +1,57 @@
+services:
+  # MySQL Database Container
+  db:
+    image: mysql:8.4
+    container_name: mysql_db
+    command: --mysql-native-password=ON --authentication-policy=mysql_native_password,,
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root2007 # Replace with a strong password
+      MYSQL_DATABASE: main_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin2007
+    ports:
+      - "3306:3306" # Map host port 3306 to container port 3306
+    volumes:
+      - ./dbdata:/var/lib/mysql # Persist data on the host machine
+    networks:
+      - app-network
+
+  # PHP and Apache Container
+  web:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: php_apache_web
+    restart: always
+    environment:
+      DB_HOST: db
+    volumes:
+      - ./:/var/www/html # Mount the full Laravel project
+      - ./docker/php/php.ini:/usr/local/etc/php/php.ini:ro # Override PHP configuration (read-only)
+      - ./docker/apache/apache2.conf:/etc/apache2/apache2.conf:ro # Override main Apache config (Debian's "httpd.conf")
+      - ./docker/apache/000-default.conf:/etc/apache2/sites-available/000-default.conf:ro # Override default vhost
+    ports:
+      - "8080:80" # Map host port 8080 to container port 80
+    depends_on:
+      - db # Ensures the database starts first
+    networks:
+      - app-network
+
+  # Optional: phpMyAdmin for database management
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin_gui
+    environment:
+      PMA_HOST: db # Connects to the 'db' service defined above
+      MYSQL_ROOT_PASSWORD: root2007
+    ports:
+      - "8001:80" # Access phpMyAdmin at http://localhost:8001
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
