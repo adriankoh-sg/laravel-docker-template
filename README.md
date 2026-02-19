@@ -14,10 +14,21 @@ You need to install the following on your local machine.
 - NodeJS
 - Docker
 
-## Start project
-Before starting the project, install dependency first.
-```npm install```
+## Project setup
+- Install dependency: 
+> ```composer install```
+> ```npm install```
+> ```npm run build```
 
+- Start docker and setup db
+> ```docker compose up -d```
+> ```php artisan migrate```
+
+- To stop the docker:
+> ```docker compose down```
+
+
+## Start project
 Use the following command to start the project.   
 ```docker compose up```
 
