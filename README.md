@@ -16,16 +16,16 @@ You need to install the following on your local machine.
 
 ## Project setup
 - Install dependency: 
-> ```composer install```
-> ```npm install```
-> ```npm run build```
+> ```composer install```   
+> ```npm install```   
+> ```npm run build```   
 
 - Start docker and setup db
-> ```docker compose up -d```
-> ```php artisan migrate```
+> ```docker compose up -d```   
+> ```php artisan migrate```   
 
 - To stop the docker:
-> ```docker compose down```
+> ```docker compose down```   
 
 
 ## Start project
